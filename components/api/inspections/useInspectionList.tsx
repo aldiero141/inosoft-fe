@@ -5,18 +5,8 @@ import { ApiResponseInterface } from "@/lib/types/api";
 
 type useProductAssortmentListProps = {
   params?: {
-    page?: number;
-    limit?: number;
-    keyword?: string;
-    offset?: number;
-    ids?: string[];
-    sort_field?: string;
-    sort_direction?: string;
-    show_in_ework_visit?: boolean;
-    branch_ids?: string;
-    product_variant_ids?: string;
-    customer_id?: string;
-    company_id?: string;
+    status?: string;
+    search?: string;
   };
   enabled?: boolean;
 };
@@ -24,10 +14,15 @@ type useProductAssortmentListProps = {
 const useInspectionList = (props?: useProductAssortmentListProps) => {
   const getInspectionListFn = async () => {
     try {
-      const response =
-        await api.get<ApiResponseInterface<InspectionInterface[]>>(
-          `/inspection`,
-        );
+      const response = await api.get<
+        ApiResponseInterface<InspectionInterface[]>
+      >(`/inspection`, {
+        params: {
+          status: props?.params?.status || "",
+          search: props?.params?.search || "",
+        },
+      });
+
       return response.data.data;
     } catch (error) {
       console.error(error);

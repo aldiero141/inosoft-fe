@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import ReduxProvider from "@/providers/redux-provider";
 import { QueryProvider } from "@/providers/query-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -24,7 +25,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-muted">
         <QueryProvider>
-          <ReduxProvider>{children}</ReduxProvider>
+          <ReduxProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+          </ReduxProvider>
         </QueryProvider>
       </body>
     </html>

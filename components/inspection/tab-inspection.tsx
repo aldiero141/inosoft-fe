@@ -5,6 +5,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "../ui/button";
 import { File, SearchIcon } from "lucide-react";
+import SearchInspection from "./search-inspection";
 
 const tabs = [
   {
@@ -49,9 +50,7 @@ export default function TabInspection() {
       </Tabs>
 
       <div className="flex gap-2 -mt-4">
-        <Button variant={"outline"} className="px-2.5">
-          <SearchIcon className="text-primary font-bold" />
-        </Button>
+        <SearchInspection />
         <Button variant={"outline"}>
           <File className="text-primary font-bold" />
           Export

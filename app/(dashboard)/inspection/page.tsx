@@ -10,7 +10,7 @@ export default function InspectionPage() {
     <InspectionProvider>
       <HeaderInspection />
 
-      <div className="flex flex-col gap-4 mx-20 my-2 py-4 shadow rounded-md bg-white ">
+      <div className="flex flex-col mx-20 my-2 py-4 shadow rounded-md bg-white ">
         <TabInspection />
         <TableInspection />
       </div>

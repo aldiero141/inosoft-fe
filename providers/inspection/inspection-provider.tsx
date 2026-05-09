@@ -4,6 +4,7 @@ import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { createContext, useContext, useMemo, useState } from "react";
 import { InspectionInterface } from "@/lib/types/inspection";
 import useInspectionList from "@/components/api/inspections/useInspectionList";
+import { useDebounce } from "@uidotdev/usehooks";
 
 interface InspectionContextData {
   listInspection: InspectionInterface[];
@@ -12,6 +13,7 @@ interface InspectionContextData {
   setSelectedInspection: Dispatch<SetStateAction<InspectionInterface[]>>;
   tabActive: TabActive;
   setTabActive: Dispatch<SetStateAction<TabActive>>;
+  setSearch: Dispatch<SetStateAction<string>>;
 }
 
 export enum TabActive {
@@ -40,9 +42,18 @@ const InspectionProvider = ({ children }: { children: ReactNode }) => {
     InspectionInterface[]
   >([]);
 
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
+
   const [tabActive, setTabActive] = useState<TabActive>(TabActive.Open);
   const { data: listInspection, isLoading: isLoadingListInspection } =
-    useInspectionList();
+    useInspectionList({
+      enabled: true,
+      params: {
+        status: tabActive,
+        search: debouncedSearch,
+      },
+    });
 
   const value = useMemo(
     () => ({
@@ -52,6 +63,7 @@ const InspectionProvider = ({ children }: { children: ReactNode }) => {
       setSelectedInspection,
       tabActive,
       setTabActive,
+      setSearch,
     }),
     [
       listInspection,
@@ -60,6 +72,7 @@ const InspectionProvider = ({ children }: { children: ReactNode }) => {
       setSelectedInspection,
       tabActive,
       setTabActive,
+      setSearch,
     ],
   );
 
