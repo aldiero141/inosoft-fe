@@ -48,6 +48,7 @@ export function CollapsibleTable<TData>(props: CollapsibleTableProps<TData>) {
                 <React.Fragment key={row.id}>
                   <TableRow
                     data-state={row.getIsSelected() && "selected"}
+                    onClick={() => row.toggleExpanded()}
                     className={cn(
                       row.getIsExpanded() && "bg-muted/50 border-b-0",
                     )}

@@ -8,7 +8,13 @@ import {
 } from "@tanstack/react-table";
 import React from "react";
 import { Button } from "../ui/button";
-import { ChevronDown, ChevronRight, InfoIcon, PlusIcon } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  InfoIcon,
+  Pencil,
+  PlusIcon,
+} from "lucide-react";
 import SortableHeader from "../ui/table/sortable-header";
 import { useInspectionContext } from "@/providers/inspection/inspection-provider";
 import { InspectionInterface, InspectionItem } from "@/lib/types/inspection";
@@ -17,6 +23,7 @@ import { DataTable } from "../ui/table/data-table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { cn } from "@/lib/utils";
 import { redirect } from "next/navigation";
+import { setInspection } from "@/store/slices/inspectionSlice";
 
 // Column definitions
 const columns: ColumnDef<InspectionInterface>[] = [
@@ -77,18 +84,6 @@ const columns: ColumnDef<InspectionInterface>[] = [
     },
   },
   {
-    accessorKey: "ecd",
-    header: ({ column }) => (
-      <div className="">
-        <SortableHeader column={column}>ECD</SortableHeader>
-      </div>
-    ),
-    cell: ({ row }) => {
-      const date = new Date(row.original.ecd);
-      return <div className=" font-medium">{date.toLocaleDateString()}</div>;
-    },
-  },
-  {
     accessorKey: "date_submitted",
     header: ({ column }) => (
       <div className="">
@@ -97,6 +92,18 @@ const columns: ColumnDef<InspectionInterface>[] = [
     ),
     cell: ({ row }) => {
       const date = new Date(row.original.date_submitted);
+      return <div className=" font-medium">{date.toLocaleDateString()}</div>;
+    },
+  },
+  {
+    accessorKey: "ecd",
+    header: ({ column }) => (
+      <div className="">
+        <SortableHeader column={column}>ECD</SortableHeader>
+      </div>
+    ),
+    cell: ({ row }) => {
+      const date = new Date(row.original.ecd);
       return <div className=" font-medium">{date.toLocaleDateString()}</div>;
     },
   },
@@ -154,24 +161,18 @@ const columns: ColumnDef<InspectionInterface>[] = [
     },
   },
   {
-    id: "expand",
-    header: () => null,
+    id: "action",
+    accessorKey: "action",
+    header: () => <div className="">Action</div>,
     cell: ({ row }) => {
       return (
         <Button
-          variant="ghost"
           size="sm"
+          variant="ghost"
           className="h-8 w-8 p-0 text-primary"
-          onClick={() => row.toggleExpanded()}
+          onClick={() => redirect(`/inspection/${row.original.id}`)}
         >
-          {row.getIsExpanded() ? (
-            <ChevronDown className="h-4 w-4 rt" />
-          ) : (
-            <ChevronRight className="h-4 w-4" />
-          )}
-          <span className="sr-only">
-            {row.getIsExpanded() ? "Collapse row" : "Expand row"}
-          </span>
+          <ChevronRight className="h-4 w-4" />
         </Button>
       );
     },
