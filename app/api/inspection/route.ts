@@ -1,17 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { returnInspectionDummy } from "@/lib/dummy/responseInpections";
 
-export async function GET(request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const status = searchParams.get("status");
   const search = searchParams.get("search");
 
   const filteredData = returnInspectionDummy.filter(
-    (item) => item.inspection_status_progress.toUpperCase() === status.toUpperCase(),
+    (item) => item.inspection_status_progress.toUpperCase() === status?.toUpperCase(),
   );
 
   const filteredBySearch = filteredData.filter(
-    (item) => item.code.toUpperCase().includes(search.toUpperCase()),
+    (item) => item.code.toUpperCase().includes(search?.toUpperCase() || ''),
   );
 
 

@@ -1,15 +1,16 @@
 "use client";
 
-import { InspectionProvider } from "@/providers/inspection/inspection-provider";
+import HeaderInspectionDetails from "@/components/inspection/detail-inspection/header-inspection-details";
+import { DraftInspectionProvider } from "@/providers/inspection/draft-inspection-provider";
 import { useParams } from "next/navigation";
 
 export default function InspectionPage() {
-  const params = useParams();
+  const { id } = useParams<{ id: string }>();
   return (
-    <InspectionProvider>
+    <DraftInspectionProvider idInspection={id}>
       <div className="flex flex-col mx-20 my-2 py-4 shadow rounded-md bg-white">
-        <h1>{params.id}</h1>
+        <HeaderInspectionDetails />
       </div>
-    </InspectionProvider>
+    </DraftInspectionProvider>
   );
 }

@@ -26,11 +26,11 @@ export function CollapsibleTable<TData>(props: CollapsibleTableProps<TData>) {
     <div className="w-full">
       <div className="rounded-md border">
         <Table>
-          <TableHeader className="bg-gray-400">
+          <TableHeader className="bg-primary/10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="text-white">
+                  <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(

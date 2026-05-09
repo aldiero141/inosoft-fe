@@ -17,7 +17,7 @@ export default function SortableHeader({
     <Button
       variant="ghost"
       onClick={() => column.toggleSorting(sorted === "asc")}
-      className="-ml-4 h-8 hover:bg-transparent text-white hover:text-primary "
+      className="-ml-4 h-8 hover:bg-transparent hover:text-primary "
     >
       {children}
       {sorted === "asc" ? (

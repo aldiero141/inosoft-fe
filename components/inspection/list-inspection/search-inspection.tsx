@@ -9,7 +9,7 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "../ui/input-group";
+} from "../../ui/input-group";
 import { useInspectionContext } from "@/providers/inspection/inspection-provider";
 
 export default function SearchInspection() {

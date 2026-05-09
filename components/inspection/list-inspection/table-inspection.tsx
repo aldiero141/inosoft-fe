@@ -7,23 +7,23 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import React from "react";
-import { Button } from "../ui/button";
-import {
-  ChevronDown,
-  ChevronRight,
-  InfoIcon,
-  Pencil,
-  PlusIcon,
-} from "lucide-react";
-import SortableHeader from "../ui/table/sortable-header";
+import { Button } from "../../ui/button";
+import { ChevronRight, InfoIcon, PlusIcon } from "lucide-react";
+import SortableHeader from "../../ui/table/sortable-header";
 import { useInspectionContext } from "@/providers/inspection/inspection-provider";
 import { InspectionInterface, InspectionItem } from "@/lib/types/inspection";
-import { CollapsibleTable } from "../ui/table/collapsible-table";
-import { DataTable } from "../ui/table/data-table";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { CollapsibleTable } from "../../ui/table/collapsible-table";
+import { DataTable } from "../../ui/table/data-table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
 import { cn } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { setInspection } from "@/store/slices/inspectionSlice";
+import { useDispatch } from "react-redux";
+import { format } from "date-fns";
+
+const formatDate = (date: number) => {
+  return format(new Date(date * 1000), "dd MMM yyyy");
+};
 
 // Column definitions
 const columns: ColumnDef<InspectionInterface>[] = [
@@ -91,8 +91,8 @@ const columns: ColumnDef<InspectionInterface>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      const date = new Date(row.original.date_submitted);
-      return <div className=" font-medium">{date.toLocaleDateString()}</div>;
+      const date = formatDate(row.original.date_submitted);
+      return <div className=" font-medium">{date}</div>;
     },
   },
   {
@@ -103,8 +103,8 @@ const columns: ColumnDef<InspectionInterface>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      const date = new Date(row.original.ecd);
-      return <div className=" font-medium">{date.toLocaleDateString()}</div>;
+      const date = formatDate(row.original.ecd);
+      return <div className=" font-medium">{date}</div>;
     },
   },
   {
@@ -165,15 +165,30 @@ const columns: ColumnDef<InspectionInterface>[] = [
     accessorKey: "action",
     header: () => <div className="">Action</div>,
     cell: ({ row }) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const dispatch = useDispatch();
+
+      const handleClick = (row: InspectionInterface) => {
+        dispatch(setInspection(row));
+        redirect(`/inspection/${row.id}`);
+      };
+
       return (
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-8 w-8 p-0 text-primary"
-          onClick={() => redirect(`/inspection/${row.original.id}`)}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-8 w-8 p-0 text-primary"
+              onClick={() => handleClick(row.original)}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Detail</p>
+          </TooltipContent>
+        </Tooltip>
       );
     },
     enableSorting: false,
@@ -182,24 +197,44 @@ const columns: ColumnDef<InspectionInterface>[] = [
 
 const itemColumns: ColumnDef<InspectionItem>[] = [
   {
-    accessorKey: "item_code",
-    header: "Item Code",
+    accessorKey: "item_desc",
+    header: ({ column }) => (
+      <div className="">
+        <SortableHeader column={column}>Description</SortableHeader>
+      </div>
+    ),
   },
   {
-    accessorKey: "item_desc",
-    header: "Description",
+    accessorKey: "ownership",
+    header: ({ column }) => (
+      <div className="">
+        <SortableHeader column={column}>Ownership</SortableHeader>
+      </div>
+    ),
   },
   {
     accessorKey: "item_quantity",
-    header: "Quantity",
+    header: ({ column }) => (
+      <div className="">
+        <SortableHeader column={column}>Quantity</SortableHeader>
+      </div>
+    ),
   },
   {
     accessorKey: "lot_number",
-    header: "Lot Number",
+    header: ({ column }) => (
+      <div className="">
+        <SortableHeader column={column}>Lot Number</SortableHeader>
+      </div>
+    ),
   },
   {
     accessorKey: "progress",
-    header: "Progress (%)",
+    header: ({ column }) => (
+      <div className="">
+        <SortableHeader column={column}>Progress (%)</SortableHeader>
+      </div>
+    ),
   },
 ];
 
@@ -210,7 +245,7 @@ function ItemsSubTable({ items }: { items: InspectionItem[] }) {
     getCoreRowModel: getCoreRowModel(),
   });
   return (
-    <div className="p-4">
+    <div className="pb-2">
       <DataTable table={table} columns={itemColumns} hideFooter />
     </div>
   );
