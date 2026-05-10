@@ -14,7 +14,7 @@ export default function Footer() {
   };
 
   return (
-    <div className="flex items-center justify-end gap-4 mt-8 w-full p-4 bg-muted/30">
+    <div className="flex items-center justify-end gap-4 w-full p-4 bg-muted/30">
       <Button
         variant="outline"
         size="lg"
