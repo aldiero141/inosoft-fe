@@ -56,7 +56,7 @@ export const serviceFormSchema = z
     ecd: z.coerce.date(),
     relate_to: z.string().min(1),
     charge_customer: z.boolean(),
-    customer_name: z.string().optional(),
+    customer_name: z.string().min(1),
     dc_code: z.string().optional(),
     order: z.array(orderItemSchema).min(1),
     note: z.string().optional(),

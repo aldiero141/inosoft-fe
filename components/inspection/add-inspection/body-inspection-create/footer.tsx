@@ -16,7 +16,7 @@ export default function Footer() {
   return (
     <div className="flex items-center justify-end gap-4 w-full p-4 bg-muted/30">
       <Button
-        variant="outline"
+        variant="ghost"
         size="lg"
         type="button"
         onClick={() => {
@@ -25,7 +25,12 @@ export default function Footer() {
       >
         Cancel
       </Button>
-      <Button size="lg" type="button" onClick={() => onHandleSubmit("draft")}>
+      <Button
+        size="lg"
+        type="button"
+        variant="outline"
+        onClick={() => onHandleSubmit("draft")}
+      >
         Save Draft
       </Button>
       <Button size="lg" type="button" onClick={() => onHandleSubmit("submit")}>

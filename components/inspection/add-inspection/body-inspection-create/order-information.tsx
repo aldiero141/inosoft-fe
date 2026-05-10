@@ -1,0 +1,358 @@
+import { useFieldArray, Controller } from "react-hook-form";
+import { useDraftInspectionContext } from "@/providers/inspection/draft-inspection-provider";
+import {
+  Trash2,
+  Plus,
+  Minus,
+  ChevronDown,
+  Logs,
+  SearchIcon,
+  ChevronRight,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { Checkbox } from "@/components/ui/checkbox";
+
+export default function OrderInformation() {
+  const { form } = useDraftInspectionContext();
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "order",
+  });
+
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [showMore, setShowMore] = useState<boolean>(false);
+
+  // const handleSelectAll = () => {
+  //   if (selectedItems.length === fields.length) {
+  //     setSelectedItems([]);
+  //   } else {
+  //     setSelectedItems(fields.map((_, index) => index));
+  //   }
+  // };
+
+  const handleSelectItem = (index: number) => {
+    if (selectedItems.includes(index)) {
+      setSelectedItems(selectedItems.filter((i) => i !== index));
+    } else {
+      setSelectedItems([...selectedItems, index]);
+    }
+  };
+
+  const handleDeleteSelected = () => {
+    // Remove in descending order so indices don't shift for remaining items
+    const sortedIndices = [...selectedItems].sort((a, b) => b - a);
+    sortedIndices.forEach((index) => remove(index));
+    setSelectedItems([]);
+    if (fields.length - selectedItems.length === 0) {
+      // If we deleted all, add one empty back to satisfy min(1) if necessary
+      // But let's just append one empty so it's not totally empty
+      append({
+        item_name: "",
+        lot: "",
+        allocation: "",
+        owner: "",
+        condition: "",
+        qty: 1,
+        available_qty: 0,
+        required_qty: 0,
+        inspection: false,
+      });
+    }
+  };
+
+  const handleAddItem = () => {
+    append({
+      item_name: "",
+      lot: "",
+      allocation: "",
+      owner: "",
+      condition: "",
+      qty: 1,
+      available_qty: 0,
+      required_qty: 0,
+      inspection: false,
+    });
+  };
+
+  return (
+    <div className="flex flex-col mx-8 my-6">
+      <div className="flex items-center justify-between pb-2">
+        <h2 className="text-md font-bold text-muted-foreground">
+          Order Information
+        </h2>
+        <div className="flex gap-4">
+          <Button
+            type="button"
+            variant="ghost"
+            className="text-red-500 hover:text-red-600 disabled:opacity-50"
+            disabled={selectedItems.length === 0}
+            onClick={handleDeleteSelected}
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className="text-teal-500 hover:text-teal-600 font-semibold"
+            onClick={handleAddItem}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Item
+          </Button>
+        </div>
+      </div>
+
+      <div className="border rounded-md overflow-hidden">
+        {/* Table Header */}
+        <div className="bg-primary text-white flex px-4 py-2 text-sm font-semibold">
+          <div className="w-[4%]"></div>
+          <div className="w-[66%]">Item Description</div>
+          <div className="w-[30%]">Qty</div>
+        </div>
+
+        {/* List of items */}
+        <div className="bg-white flex flex-col divide-y">
+          {fields.map((field, index) => (
+            <div key={field.id} className="p-4 flex flex-col gap-4">
+              {/* Top Row */}
+              <div className="flex items-center gap-4">
+                <div className="flex justify-center pr-2">
+                  <Checkbox
+                    className="size-6 rounded-md border-gray-400 text-green-400 focus:ring-green-400"
+                    checked={selectedItems.includes(index)}
+                    onCheckedChange={() => handleSelectItem(index)}
+                  />
+                </div>
+                <div className="flex-1 flex gap-4">
+                  <Controller
+                    control={form.control}
+                    name={`order.${index}.item_name`}
+                    render={({ field }) => (
+                      <div className="w-[68%]">
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="w-full bg-white h-10">
+                            <SelectValue placeholder="Select an item" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="item-1">Item 1</SelectItem>
+                            <SelectItem value="item-2">Item 2</SelectItem>
+                            <SelectItem value="item-3">Item 3</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
+                  />
+                  <div className="flex flex-1 gap-2">
+                    <Controller
+                      control={form.control}
+                      name={`order.${index}.qty`}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Enter Qty"
+                          className="flex-1 h-10"
+                        />
+                      )}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-10 h-10 p-0 text-teal-500 border-teal-100 bg-teal-50/30 hover:bg-teal-50"
+                      onClick={() => setShowMore(!showMore)}
+                    >
+                      {showMore ? (
+                        <ChevronDown className="size-5" />
+                      ) : (
+                        <ChevronRight className="size-5" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sub Row */}
+              <div
+                className={`flex gap-4 items-end pl-14 transition-all duration-300 ease-in-out ${
+                  showMore
+                    ? "max-h-[500px] opacity-100"
+                    : "max-h-0 opacity-0 overflow-hidden"
+                }`}
+              >
+                <div className="flex-none opacity-50 mb-2 mr-2">
+                  <Logs />
+                </div>
+                <div className="flex-1 grid grid-cols-7 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-gray-500 font-medium">
+                      Lot Selection
+                    </label>
+                    <Controller
+                      control={form.control}
+                      name={`order.${index}.lot`}
+                      render={({ field }) => (
+                        <InputGroup className="max-w-xs">
+                          <InputGroupAddon>
+                            <SearchIcon />
+                          </InputGroupAddon>
+                          <InputGroupInput {...field} className="h-10" />
+                        </InputGroup>
+                      )}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-gray-500 font-medium">
+                      Allocation
+                    </label>
+                    <Controller
+                      control={form.control}
+                      name={`order.${index}.allocation`}
+                      render={({ field }) => (
+                        <InputGroup className="max-w-xs">
+                          <InputGroupAddon>
+                            <SearchIcon />
+                          </InputGroupAddon>
+                          <InputGroupInput {...field} className="h-10" />
+                        </InputGroup>
+                      )}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-gray-500 font-medium">
+                      Owner
+                    </label>
+                    <Controller
+                      control={form.control}
+                      name={`order.${index}.owner`}
+                      render={({ field }) => (
+                        <InputGroup className="max-w-xs">
+                          <InputGroupAddon>
+                            <SearchIcon />
+                          </InputGroupAddon>
+                          <InputGroupInput {...field} className="h-10" />
+                        </InputGroup>
+                      )}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-gray-500 font-medium">
+                      Condition
+                    </label>
+                    <Controller
+                      control={form.control}
+                      name={`order.${index}.condition`}
+                      render={({ field }) => (
+                        <InputGroup className="max-w-xs">
+                          <InputGroupAddon>
+                            <SearchIcon />
+                          </InputGroupAddon>
+                          <InputGroupInput {...field} className="h-10" />
+                        </InputGroup>
+                      )}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-gray-500 font-medium">
+                      Avail. Qty
+                    </label>
+                    <Controller
+                      control={form.control}
+                      name={`order.${index}.available_qty`}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          className="h-10 bg-gray-50 text-gray-500"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-gray-500 font-medium">
+                      Qty Required
+                    </label>
+                    <Controller
+                      control={form.control}
+                      name={`order.${index}.required_qty`}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Enter Qty"
+                          className="h-10 bg-gray-50"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-gray-500 font-medium">
+                      Inspection Required
+                    </label>
+                    <div className="flex items-center gap-2 h-10">
+                      <Controller
+                        control={form.control}
+                        name={`order.${index}.inspection`}
+                        render={({ field }) => (
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            className="rounded-xs border-gray-400 text-green-400 focus:ring-green-400"
+                          />
+                        )}
+                      />
+                      <div className="flex-1 bg-gray-50 border rounded-md h-full"></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2 ml-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-10 h-10 p-0 text-gray-400 hover:text-red-500"
+                    onClick={() => {
+                      if (fields.length > 1) {
+                        remove(index);
+                      }
+                    }}
+                  >
+                    <Minus className="size-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    className="w-10 h-10 p-0 bg-teal-500 hover:bg-teal-600 text-white"
+                    onClick={handleAddItem}
+                  >
+                    <Plus className="size-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -19,7 +19,7 @@ export default function Note() {
             id="note"
             value={field.value}
             onChange={(e) => field.onChange(e.target.value)}
-            placeholder="note"
+            placeholder="Enter Note"
             className="min-h-[100px]"
           />
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

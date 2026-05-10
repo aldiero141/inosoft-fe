@@ -21,7 +21,7 @@ export default function ChargeCustomer() {
           <Switch
             checked={field.value}
             onCheckedChange={field.onChange}
-            className="max-w-lg max-h-lg"
+            className="w-8 mt-2"
           />
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </div>

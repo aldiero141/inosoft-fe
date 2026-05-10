@@ -17,10 +17,8 @@ export default function SearchInspection() {
   return (
     <div>
       <Popover>
-        <PopoverTrigger asChild>
-          <Button variant={"outline"} className="px-2.5">
-            <SearchIcon className="text-primary font-bold" />
-          </Button>
+        <PopoverTrigger className="border rounded-md size-9 flex items-center justify-center hover:bg-muted/50">
+          <SearchIcon className="text-primary font-bold size-4" />
         </PopoverTrigger>
         <PopoverContent>
           <InputGroup className="max-w-xs">

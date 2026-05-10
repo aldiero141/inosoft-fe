@@ -27,6 +27,11 @@ export default function SOWField() {
 
   const onChangeServiceType = () => {
     setScope(["Steering Wheele", "Brake System", "Suspension System"]);
+    form.setValue("scope", [
+      "Steering Wheele",
+      "Brake System",
+      "Suspension System",
+    ]);
   };
 
   return (
