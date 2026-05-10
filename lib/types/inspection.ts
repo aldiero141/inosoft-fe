@@ -21,7 +21,7 @@ export interface InspectionInterface {
 export interface ChargesInterface {
   order_number: string;
   service_desc: string;
-  qty: string;
+  qty: number;
   unit_price: number;
 }
 

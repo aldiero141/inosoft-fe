@@ -33,19 +33,27 @@ export default function GeneralInformation() {
       </div>
       <div className="col-span-4 grid grid-cols-3 gap-8 border-r mr-4">
         <DetailItem title="Service Type">
-          <span>{inspection.code}</span>
+          <span>{inspection?.type || "-"}</span>
         </DetailItem>
         <DetailItem title="Location" className="col-span-2">
-          <span>{inspection.code}</span>
+          <span>{inspection?.location || "-"}</span>
         </DetailItem>
         <DetailItem title="Date Submitted">
-          <span>{inspection.code}</span>
+          <span>
+            {inspection?.date_submitted
+              ? new Date(inspection.date_submitted * 1000).toDateString()
+              : "-"}
+          </span>
         </DetailItem>
         <DetailItem title="Estimation Completion Date">
-          <span>{inspection.code}</span>
+          <span>
+            {inspection?.ecd
+              ? new Date(inspection.ecd * 1000).toDateString()
+              : "-"}
+          </span>
         </DetailItem>
         <DetailItem title="Related To">
-          <span className="text-primary">{inspection.code}</span>
+          <span className="text-primary">{inspection.related_to || "-"}</span>
         </DetailItem>
         <div className="w-full col-span-3 pr-4 gap-4">
           <Label className="text-muted-foreground text-sm">
@@ -54,7 +62,7 @@ export default function GeneralInformation() {
           <Separator />
 
           <DetailItem title="D/C Code" className="col-span-3 mt-2">
-            <span>{inspection.code}</span>
+            <span>{inspection.dc_code || "-"}</span>
           </DetailItem>
         </div>
       </div>
@@ -64,18 +72,22 @@ export default function GeneralInformation() {
             <span>{inspection.customer}</span>
           </DetailItem>
           <DetailItem title="Status" className="">
-            <div
-              className={cn(
-                "text-sm text-muted-foreground font-medium border rounded-full w-30 flex items-center justify-center h-6",
-                inspection.status === "Draft"
-                  ? "bg-muted"
-                  : inspection.status === "New"
-                    ? "bg-white"
-                    : "bg-white",
-              )}
-            >
-              {inspection.status}
-            </div>
+            {inspection?.status ? (
+              <span
+                className={cn(
+                  "text-sm text-muted-foreground font-medium border rounded-full w-30 flex items-center justify-center h-6",
+                  inspection.status === "Draft"
+                    ? "bg-muted"
+                    : inspection.status === "New"
+                      ? "bg-white"
+                      : "bg-white",
+                )}
+              >
+                {inspection.status}
+              </span>
+            ) : (
+              "-"
+            )}
           </DetailItem>
         </div>
 

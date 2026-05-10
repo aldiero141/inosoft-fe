@@ -77,7 +77,32 @@ export const returnInspectionDummy: InspectionInterface[] = [
     service_type: "Inspection",
     dc_code: "DC-001",
     customer: "PT Pertamina Hulu Energi",
-    charges: [],
+    charges: [
+      {
+        order_number: "ORD-2026-0001",
+        service_desc: "Inspection",
+        qty: 3,
+        unit_price: 150
+      },
+      {
+        order_number: "ORD-2026-0002",
+        service_desc: "Inspection",
+        qty: 2,
+        unit_price: 200
+      },
+      {
+        order_number: "ORD-2026-0003",
+        service_desc: "Inspection",
+        qty: 12,
+        unit_price: 25
+      },
+      {
+        order_number: "ORD-2026-0004",
+        service_desc: "Inspection",
+        qty: 5,
+        unit_price: 80
+      }
+    ],
     items: [{
       id_item:"62972983244a9372244224ff",
       item_code:"ITM001278",
@@ -203,7 +228,32 @@ export const returnInspectionDummy: InspectionInterface[] = [
     service_type: "Inspection",
     dc_code: "DC-001",
     customer: "PT Pertamina Hulu Energi",
-    charges: [],
+    charges: [
+      {
+        order_number: "ORD-2026-0001",
+        service_desc: "Inspection",
+        qty: 3,
+        unit_price: 150
+      },
+      {
+        order_number: "ORD-2026-0002",
+        service_desc: "Inspection",
+        qty: 2,
+        unit_price: 200
+      },
+      {
+        order_number: "ORD-2026-0003",
+        service_desc: "Inspection",
+        qty: 12,
+        unit_price: 25
+      },
+      {
+        order_number: "ORD-2026-0004",
+        service_desc: "Inspection",
+        qty: 5,
+        unit_price: 80
+      }
+    ],
     items: [{
       id_item:"62972983244a9372244224ff",
       item_code:"ITM001278",
@@ -329,7 +379,32 @@ export const returnInspectionDummy: InspectionInterface[] = [
     service_type: "Inspection",
     dc_code: "DC-001",
     customer: "PT Pertamina Hulu Energi",
-    charges: [],
+    charges: [
+      {
+        order_number: "ORD-2026-0001",
+        service_desc: "Inspection",
+        qty: 3,
+        unit_price: 150
+      },
+      {
+        order_number: "ORD-2026-0002",
+        service_desc: "Inspection",
+        qty: 2,
+        unit_price: 200
+      },
+      {
+        order_number: "ORD-2026-0003",
+        service_desc: "Inspection",
+        qty: 12,
+        unit_price: 25
+      },
+      {
+        order_number: "ORD-2026-0004",
+        service_desc: "Inspection",
+        qty: 5,
+        unit_price: 80
+      }
+    ],
     items: [{
       id_item:"62972983244a9372244224ff",
       item_code:"ITM001278",
@@ -457,7 +532,32 @@ export const returnInspectionDummy: InspectionInterface[] = [
     service_type: "Inspection",
     dc_code: "DC-001",
     customer: "PT Pertamina Hulu Energi",
-    charges: [],
+    charges: [
+      {
+        order_number: "ORD-2026-0001",
+        service_desc: "Inspection",
+        qty: 3,
+        unit_price: 150
+      },
+      {
+        order_number: "ORD-2026-0002",
+        service_desc: "Inspection",
+        qty: 2,
+        unit_price: 200
+      },
+      {
+        order_number: "ORD-2026-0003",
+        service_desc: "Inspection",
+        qty: 12,
+        unit_price: 25
+      },
+      {
+        order_number: "ORD-2026-0004",
+        service_desc: "Inspection",
+        qty: 5,
+        unit_price: 80
+      }
+    ],
     items: [{
       id_item:"62972983244a9372244224ff",
       item_code:"ITM001278",
@@ -583,7 +683,32 @@ export const returnInspectionDummy: InspectionInterface[] = [
     service_type: "Inspection",
     dc_code: "DC-001",
     customer: "PT Pertamina Hulu Energi",
-    charges: [],
+    charges: [
+      {
+        order_number: "ORD-2026-0001",
+        service_desc: "Inspection",
+        qty: 3,
+        unit_price: 150
+      },
+      {
+        order_number: "ORD-2026-0002",
+        service_desc: "Inspection",
+        qty: 2,
+        unit_price: 200
+      },
+      {
+        order_number: "ORD-2026-0003",
+        service_desc: "Inspection",
+        qty: 12,
+        unit_price: 25
+      },
+      {
+        order_number: "ORD-2026-0004",
+        service_desc: "Inspection",
+        qty: 5,
+        unit_price: 80
+      }
+    ],
     items: [{
       id_item:"62972983244a9372244224ff",
       item_code:"ITM001278",
@@ -709,7 +834,32 @@ export const returnInspectionDummy: InspectionInterface[] = [
     service_type: "Inspection",
     dc_code: "DC-001",
     customer: "PT Pertamina Hulu Energi",
-    charges: [],
+    charges: [
+      {
+        order_number: "ORD-2026-0001",
+        service_desc: "Inspection",
+        qty: 3,
+        unit_price: 150
+      },
+      {
+        order_number: "ORD-2026-0002",
+        service_desc: "Inspection",
+        qty: 2,
+        unit_price: 200
+      },
+      {
+        order_number: "ORD-2026-0003",
+        service_desc: "Inspection",
+        qty: 12,
+        unit_price: 25
+      },
+      {
+        order_number: "ORD-2026-0004",
+        service_desc: "Inspection",
+        qty: 5,
+        unit_price: 80
+      }
+    ],
     items: [{
       id_item:"62972983244a9372244224ff",
       item_code:"ITM001278",
@@ -838,7 +988,32 @@ export const returnInspectionDummy: InspectionInterface[] = [
     service_type: "Inspection",
     dc_code: "DC-001",
     customer: "PT Pertamina Hulu Energi",
-    charges: [],
+    charges: [
+      {
+        order_number: "ORD-2026-0001",
+        service_desc: "Inspection",
+        qty: 3,
+        unit_price: 150
+      },
+      {
+        order_number: "ORD-2026-0002",
+        service_desc: "Inspection",
+        qty: 2,
+        unit_price: 200
+      },
+      {
+        order_number: "ORD-2026-0003",
+        service_desc: "Inspection",
+        qty: 12,
+        unit_price: 25
+      },
+      {
+        order_number: "ORD-2026-0004",
+        service_desc: "Inspection",
+        qty: 5,
+        unit_price: 80
+      }
+    ],
     items: [{
       id_item:"62972983244a9372244224ff",
       item_code:"ITM001278",
@@ -980,7 +1155,32 @@ export const returnInspectionDummy: InspectionInterface[] = [
     service_type: "Inspection",
     dc_code: "DC-001",
     customer: "PT Pertamina Hulu Energi",
-    charges: [],
+    charges: [
+      {
+        order_number: "ORD-2026-0001",
+        service_desc: "Inspection",
+        qty: 3,
+        unit_price: 150
+      },
+      {
+        order_number: "ORD-2026-0002",
+        service_desc: "Inspection",
+        qty: 2,
+        unit_price: 200
+      },
+      {
+        order_number: "ORD-2026-0003",
+        service_desc: "Inspection",
+        qty: 12,
+        unit_price: 25
+      },
+      {
+        order_number: "ORD-2026-0004",
+        service_desc: "Inspection",
+        qty: 5,
+        unit_price: 80
+      }
+    ],
     items: [{
       id_item:"62972983244a9372244224ff",
       item_code:"ITM001278",
@@ -1091,7 +1291,32 @@ export const returnInspectionDummy: InspectionInterface[] = [
     service_type: "Inspection",
     dc_code: "DC-001",
     customer: "PT Pertamina Hulu Energi",
-    charges: [],
+    charges: [
+      {
+        order_number: "ORD-2026-0001",
+        service_desc: "Inspection",
+        qty: 3,
+        unit_price: 150
+      },
+      {
+        order_number: "ORD-2026-0002",
+        service_desc: "Inspection",
+        qty: 2,
+        unit_price: 200
+      },
+      {
+        order_number: "ORD-2026-0003",
+        service_desc: "Inspection",
+        qty: 12,
+        unit_price: 25
+      },
+      {
+        order_number: "ORD-2026-0004",
+        service_desc: "Inspection",
+        qty: 5,
+        unit_price: 80
+      }
+    ],
     items: [{
       id_item:"62972983244a9372244224ff",
       item_code:"ITM001278",
