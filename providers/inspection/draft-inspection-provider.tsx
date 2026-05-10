@@ -6,8 +6,8 @@ import { InspectionInterface } from "@/lib/types/inspection";
 import useInspectionByID from "@/components/api/inspections/useInspectionByID";
 
 interface DraftInspectionContextData {
-  listInspection: InspectionInterface[];
-  isLoadingListInspection: boolean;
+  inspection: InspectionInterface;
+  isLoadingInspection: boolean;
 }
 
 const DraftInspectionContext = createContext<
@@ -33,7 +33,7 @@ const DraftInspectionProvider = ({
   children,
   idInspection,
 }: DraftInspectionProviderProps) => {
-  const { data: listInspection, isLoading: isLoadingListInspection } =
+  const { data: inspection, isLoading: isLoadingInspection } =
     useInspectionByID({
       params: {
         id: idInspection || "",
@@ -43,10 +43,10 @@ const DraftInspectionProvider = ({
 
   const value = useMemo(
     () => ({
-      listInspection: listInspection || [],
-      isLoadingListInspection,
+      inspection: (inspection || {}) as unknown as InspectionInterface,
+      isLoadingInspection,
     }),
-    [listInspection, isLoadingListInspection],
+    [inspection, isLoadingInspection],
   );
 
   return (
