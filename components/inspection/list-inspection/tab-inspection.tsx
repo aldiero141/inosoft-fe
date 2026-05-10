@@ -4,7 +4,7 @@ import {
 } from "@/providers/inspection/inspection-provider";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "../../ui/button";
-import { File, SearchIcon } from "lucide-react";
+import { File } from "lucide-react";
 import SearchInspection from "./search-inspection";
 
 const tabs = [

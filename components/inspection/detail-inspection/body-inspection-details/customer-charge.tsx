@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/table/data-table";
 import { ChargesInterface } from "@/lib/types/inspection";
@@ -66,7 +67,7 @@ export default function CustomerCharge() {
   });
 
   return (
-    <section className="space-y-4 my-6">
+    <section className="space-y-4 mt-6">
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-bold">Charges To Customer</h1>
         <div className="flex gap-2">

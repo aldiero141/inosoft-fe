@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 import {
   ColumnDef,
   getCoreRowModel,
@@ -20,6 +21,7 @@ import { redirect } from "next/navigation";
 import { setInspection } from "@/store/slices/inspectionSlice";
 import { useDispatch } from "react-redux";
 import { format } from "date-fns";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const formatDate = (date: number) => {
   return format(new Date(date * 1000), "dd MMM yyyy");
@@ -252,7 +254,7 @@ function ItemsSubTable({ items }: { items: InspectionItem[] }) {
 }
 
 export default function TableInspection() {
-  const { listInspection } = useInspectionContext();
+  const { listInspection, isLoadingListInspection } = useInspectionContext();
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const table = useReactTable({
@@ -273,13 +275,17 @@ export default function TableInspection() {
         <PlusIcon className="text-white size-4" />
         Create Request
       </Button>
-      <CollapsibleTable
-        table={table}
-        columns={columns}
-        renderSubComponent={({ row }) => (
-          <ItemsSubTable items={row.original.items} />
-        )}
-      />
+      {isLoadingListInspection ? (
+        <Skeleton className="h-[600px] w-full" />
+      ) : (
+        <CollapsibleTable
+          table={table}
+          columns={columns}
+          renderSubComponent={({ row }) => (
+            <ItemsSubTable items={row.original.items} />
+          )}
+        />
+      )}
     </div>
   );
 }

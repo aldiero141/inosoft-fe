@@ -16,41 +16,42 @@ export default function HeaderInspectionDetails() {
 
   return (
     <header className="w-full flex justify-between gap-2 px-20 pt-6 pb-5 items-end">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-xl font-bold">Inspection Details</h1>
-        {isLoadingInspection ? (
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1">
-                <Skeleton className="h-4 w-40" />
-              </div>
-            </div>
+      {isLoadingInspection ? (
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-8 w-[400px]" />
+          <Skeleton className="h-8 w-[700px]" />
+        </div>
+      ) : (
+        <>
+          <div className="flex flex-col gap-2">
+            <h1 className="text-xl font-bold">Inspection Details</h1>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/">Quality & HSE</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/inspection">Inspection</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/inspection">
+                    Inspection Record
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="font-semibold text-primary">
+                    {inspection.code}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
-        ) : (
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Quality & HSE</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/inspection">Inspection</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Inspection Record</BreadcrumbPage>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage className="font-semibold text-primary">
-                  {inspection.code}
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        )}
-      </div>
-      <ActionButton />
+          <ActionButton />
+        </>
+      )}
     </header>
   );
 }

@@ -26,7 +26,7 @@ function useDraftInspectionContext(): DraftInspectionContextData {
 
 interface DraftInspectionProviderProps {
   children: ReactNode;
-  idInspection: string;
+  idInspection?: string;
 }
 
 const DraftInspectionProvider = ({

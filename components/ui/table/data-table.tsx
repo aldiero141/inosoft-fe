@@ -19,6 +19,7 @@ interface DataTableProps<TData> {
   headerGroups?: {
     colSpan: number;
     label: string;
+    className?: string;
   }[];
 }
 
@@ -33,7 +34,7 @@ export function DataTable<TData>({
       <div className="rounded-md border">
         <Table>
           {headerGroups && headerGroups.length > 0 ? (
-            <TableHeader>
+            <TableHeader className="bg-primary/5">
               {/* Parent grouped header row */}
               <TableRow className="hover:bg-transparent border-b-0">
                 {headerGroups.map((group, index) => (
@@ -41,8 +42,9 @@ export function DataTable<TData>({
                     key={index}
                     colSpan={group.colSpan}
                     className={cn(
-                      "h-8 text-center text-sm font-medium text-muted-foreground",
+                      "h-8 text-center text-sm font-medium text-foreground",
                       group.label && "border-b-2 border-primary/60",
+                      group.className,
                     )}
                   >
                     {group.label}
@@ -55,16 +57,24 @@ export function DataTable<TData>({
                   key={headerGroup.id}
                   className="bg-muted/30 hover:bg-muted/30"
                 >
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className="h-8 text-xs">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  ))}
+                  {headerGroup.headers.map((header) => {
+                    const meta = header.column.columnDef.meta as
+                      | { headerClassName?: string }
+                      | undefined;
+                    return (
+                      <TableHead
+                        key={header.id}
+                        className={cn("h-8 text-xs", meta?.headerClassName)}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
               ))}
             </TableHeader>
@@ -96,14 +106,19 @@ export function DataTable<TData>({
                       row.getIsExpanded() && "bg-muted/50 border-b-0",
                     )}
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
+                    {row.getVisibleCells().map((cell) => {
+                      const meta = cell.column.columnDef.meta as
+                        | { cellClassName?: string }
+                        | undefined;
+                      return (
+                        <TableCell key={cell.id} className={meta?.cellClassName}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      );
+                    })}
                   </TableRow>
                 </React.Fragment>
               ))

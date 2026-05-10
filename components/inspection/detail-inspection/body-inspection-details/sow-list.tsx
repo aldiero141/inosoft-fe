@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 import { DataTable } from "@/components/ui/table/data-table";
 import { ScopeInterface } from "@/lib/types/inspection";
 import { useDraftInspectionContext } from "@/providers/inspection/draft-inspection-provider";
