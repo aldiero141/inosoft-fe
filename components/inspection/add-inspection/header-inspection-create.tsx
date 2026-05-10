@@ -7,7 +7,7 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 
-export default function HeaderInspectionDetails() {
+export default function HeaderInspectionCreate() {
   return (
     <header className="w-full flex justify-between gap-2 px-20 pt-6 pb-5 items-end">
       <div className="flex flex-col gap-2">

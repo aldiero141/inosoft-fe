@@ -1,9 +1,13 @@
-import HeaderInspectionDetails from "./header-inspection-details";
+import HeaderInspectionCreate from "./header-inspection-create";
+import BodyInspectionCreate from "./body-inspection-create";
 
 export default function AddInspection() {
   return (
     <>
-      <HeaderInspectionDetails />
+      <HeaderInspectionCreate />
+      <form id="form-inspection">
+        <BodyInspectionCreate />
+      </form>
     </>
   );
 }

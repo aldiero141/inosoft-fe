@@ -10,7 +10,7 @@ export default function BodyInspectionDetails() {
   const { isLoadingInspection } = useDraftInspectionContext();
 
   return (
-    <section className="px-4">
+    <section className="px-4 flex flex-col mx-20 my-2 py-4 shadow rounded-md bg-white">
       {!isLoadingInspection ? (
         <>
           <ActionBody />
