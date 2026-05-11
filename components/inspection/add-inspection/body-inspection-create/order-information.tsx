@@ -20,6 +20,7 @@ import {
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import useItemsOptions from "@/components/api/options/useItemsOptions";
+import { FieldError } from "@/components/ui/field";
 
 export default function OrderInformation() {
   const {
@@ -145,8 +146,8 @@ export default function OrderInformation() {
           {fields.map((field, index) => (
             <div key={field.id} className="p-4 flex flex-col gap-4">
               {/* Top Row */}
-              <div className="flex items-center gap-4">
-                <div className="flex justify-center pr-2">
+              <div className="flex items-start gap-4">
+                <div className="flex justify-center pr-2 pt-2">
                   <Checkbox
                     className="size-6 rounded-md border-gray-400 text-green-400 focus:ring-green-400"
                     checked={selectedItems.includes(index)}
@@ -154,11 +155,12 @@ export default function OrderInformation() {
                   />
                 </div>
                 <div className="flex-1 flex gap-4">
+                  {/* Item Name */}
                   <Controller
                     control={form.control}
                     name={`order.${index}.item_name`}
-                    render={({ field }) => (
-                      <div className="w-[68%]">
+                    render={({ field, fieldState }) => (
+                      <div className="w-[68%] flex flex-col gap-1">
                         <Select
                           value={field.value}
                           onValueChange={(value) => {
@@ -191,19 +193,29 @@ export default function OrderInformation() {
                             )}
                           </SelectContent>
                         </Select>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
                       </div>
                     )}
                   />
+
+                  {/* Qty + Expand */}
                   <div className="flex flex-1 gap-2">
                     <Controller
                       control={form.control}
                       name={`order.${index}.qty`}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          placeholder="Enter Qty"
-                          className="flex-1 h-10"
-                        />
+                      render={({ field, fieldState }) => (
+                        <div className="flex-1 flex flex-col gap-1">
+                          <Input
+                            {...field}
+                            placeholder="Enter Qty"
+                            className="w-full h-10"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </div>
                       )}
                     />
                     <Button
@@ -224,16 +236,17 @@ export default function OrderInformation() {
 
               {/* Sub Row */}
               <div
-                className={`flex gap-4 items-end pl-14 transition-all duration-300 ease-in-out ${
+                className={`flex gap-4 items-start pl-14 transition-all duration-300 ease-in-out ${
                   showMore
                     ? "max-h-[500px] opacity-100"
                     : "max-h-0 opacity-0 overflow-hidden"
                 }`}
               >
-                <div className="flex-none opacity-50 mb-2 mr-2">
+                <div className="flex-none opacity-50 mt-2 mr-2">
                   <Logs />
                 </div>
                 <div className="flex-1 grid grid-cols-7 gap-3">
+                  {/* Lot */}
                   <div className="flex flex-col gap-1">
                     <label className="text-xs text-gray-500 font-medium">
                       Lot Selection
@@ -241,35 +254,41 @@ export default function OrderInformation() {
                     <Controller
                       control={form.control}
                       name={`order.${index}.lot`}
-                      render={({ field }) => (
-                        <Select
-                          value={field.value}
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                            onLotChange(value || "", index);
-                          }}
-                        >
-                          <SelectTrigger className="w-full h-10">
-                            <SelectValue placeholder="Select lot" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {getLotOptions(index).length === 0 ? (
-                              <SelectItem value="not-found" disabled>
-                                No lots available
-                              </SelectItem>
-                            ) : (
-                              getLotOptions(index).map((opt) => (
-                                <SelectItem key={opt} value={opt}>
-                                  {opt}
+                      render={({ field, fieldState }) => (
+                        <div className="flex flex-col gap-1">
+                          <Select
+                            value={field.value}
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                              onLotChange(value || "", index);
+                            }}
+                          >
+                            <SelectTrigger className="w-full h-10">
+                              <SelectValue placeholder="Select lot" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {getLotOptions(index).length === 0 ? (
+                                <SelectItem value="not-found" disabled>
+                                  No lots available
                                 </SelectItem>
-                              ))
-                            )}
-                          </SelectContent>
-                        </Select>
+                              ) : (
+                                getLotOptions(index).map((opt) => (
+                                  <SelectItem key={opt} value={opt}>
+                                    {opt}
+                                  </SelectItem>
+                                ))
+                              )}
+                            </SelectContent>
+                          </Select>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </div>
                       )}
                     />
                   </div>
 
+                  {/* Allocation */}
                   <div className="flex flex-col gap-1">
                     <label className="text-xs text-gray-500 font-medium">
                       Allocation
@@ -277,32 +296,38 @@ export default function OrderInformation() {
                     <Controller
                       control={form.control}
                       name={`order.${index}.allocation`}
-                      render={({ field }) => (
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger className="w-full h-10">
-                            <SelectValue placeholder="Select allocation" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {getAllocationOptions(index).length === 0 ? (
-                              <SelectItem value="not-found" disabled>
-                                No allocations available
-                              </SelectItem>
-                            ) : (
-                              getAllocationOptions(index).map((opt) => (
-                                <SelectItem key={opt} value={opt}>
-                                  {opt}
+                      render={({ field, fieldState }) => (
+                        <div className="flex flex-col gap-1">
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="w-full h-10">
+                              <SelectValue placeholder="Select allocation" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {getAllocationOptions(index).length === 0 ? (
+                                <SelectItem value="not-found" disabled>
+                                  No allocations available
                                 </SelectItem>
-                              ))
-                            )}
-                          </SelectContent>
-                        </Select>
+                              ) : (
+                                getAllocationOptions(index).map((opt) => (
+                                  <SelectItem key={opt} value={opt}>
+                                    {opt}
+                                  </SelectItem>
+                                ))
+                              )}
+                            </SelectContent>
+                          </Select>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </div>
                       )}
                     />
                   </div>
 
+                  {/* Owner */}
                   <div className="flex flex-col gap-1">
                     <label className="text-xs text-gray-500 font-medium">
                       Owner
@@ -310,32 +335,38 @@ export default function OrderInformation() {
                     <Controller
                       control={form.control}
                       name={`order.${index}.owner`}
-                      render={({ field }) => (
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger className="w-full h-10">
-                            <SelectValue placeholder="Select owner" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {getOwnerOptions(index).length === 0 ? (
-                              <SelectItem value="not-found" disabled>
-                                No owners available
-                              </SelectItem>
-                            ) : (
-                              getOwnerOptions(index).map((opt) => (
-                                <SelectItem key={opt} value={opt}>
-                                  {opt}
+                      render={({ field, fieldState }) => (
+                        <div className="flex flex-col gap-1">
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="w-full h-10">
+                              <SelectValue placeholder="Select owner" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {getOwnerOptions(index).length === 0 ? (
+                                <SelectItem value="not-found" disabled>
+                                  No owners available
                                 </SelectItem>
-                              ))
-                            )}
-                          </SelectContent>
-                        </Select>
+                              ) : (
+                                getOwnerOptions(index).map((opt) => (
+                                  <SelectItem key={opt} value={opt}>
+                                    {opt}
+                                  </SelectItem>
+                                ))
+                              )}
+                            </SelectContent>
+                          </Select>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </div>
                       )}
                     />
                   </div>
 
+                  {/* Condition */}
                   <div className="flex flex-col gap-1">
                     <label className="text-xs text-gray-500 font-medium">
                       Condition
@@ -343,24 +374,30 @@ export default function OrderInformation() {
                     <Controller
                       control={form.control}
                       name={`order.${index}.condition`}
-                      render={({ field }) => (
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger className="w-full h-10">
-                            <SelectValue placeholder="Select condition" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Good">Good</SelectItem>
-                            <SelectItem value="Repair">Repair</SelectItem>
-                            <SelectItem value="Scrap">Scrap</SelectItem>
-                          </SelectContent>
-                        </Select>
+                      render={({ field, fieldState }) => (
+                        <div className="flex flex-col gap-1">
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="w-full h-10">
+                              <SelectValue placeholder="Select condition" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Good">Good</SelectItem>
+                              <SelectItem value="Repair">Repair</SelectItem>
+                              <SelectItem value="Scrap">Scrap</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </div>
                       )}
                     />
                   </div>
 
+                  {/* Avail. Qty */}
                   <div className="flex flex-col gap-1">
                     <label className="text-xs text-gray-500 font-medium">
                       Avail. Qty
@@ -368,15 +405,22 @@ export default function OrderInformation() {
                     <Controller
                       control={form.control}
                       name={`order.${index}.available_qty`}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          className="h-10 bg-gray-50 text-gray-500"
-                        />
+                      render={({ field, fieldState }) => (
+                        <div className="flex flex-col gap-1">
+                          <Input
+                            {...field}
+                            readOnly
+                            className="h-10 bg-gray-50 text-gray-500"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </div>
                       )}
                     />
                   </div>
 
+                  {/* Required Qty */}
                   <div className="flex flex-col gap-1">
                     <label className="text-xs text-gray-500 font-medium">
                       Qty Required
@@ -384,34 +428,45 @@ export default function OrderInformation() {
                     <Controller
                       control={form.control}
                       name={`order.${index}.required_qty`}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          placeholder="Enter Qty"
-                          className="h-10 bg-gray-50"
-                        />
+                      render={({ field, fieldState }) => (
+                        <div className="flex flex-col gap-1">
+                          <Input
+                            {...field}
+                            placeholder="Enter Qty"
+                            className="h-10 bg-gray-50"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </div>
                       )}
                     />
                   </div>
 
+                  {/* Inspection Required */}
                   <div className="flex flex-col gap-1">
                     <label className="text-xs text-gray-500 font-medium">
                       Inspection Required
                     </label>
-                    <div className="flex items-center gap-2 h-10">
-                      <Controller
-                        control={form.control}
-                        name={`order.${index}.inspection`}
-                        render={({ field }) => (
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            className="rounded-xs border-gray-400 text-green-400 focus:ring-green-400"
-                          />
-                        )}
-                      />
-                      <div className="flex-1 bg-gray-50 border rounded-md h-full"></div>
-                    </div>
+                    <Controller
+                      control={form.control}
+                      name={`order.${index}.inspection`}
+                      render={({ field, fieldState }) => (
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2 h-10">
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              className="rounded-xs border-gray-400 text-green-400 focus:ring-green-400"
+                            />
+                            <div className="flex-1 bg-gray-50 border rounded-md h-full" />
+                          </div>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </div>
+                      )}
+                    />
                   </div>
                 </div>
 

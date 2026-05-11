@@ -13,7 +13,6 @@ export default function Note() {
         <Field data-invalid={fieldState.invalid} className="px-8 py-4">
           <FieldLabel className="flex items-center gap-1" htmlFor="note">
             Note to Yard
-            <span className="text-red-500">*</span>
           </FieldLabel>
           <Textarea
             id="note"
