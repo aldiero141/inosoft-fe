@@ -44,6 +44,34 @@ export const responseItems: ItemInterface[] = [{
             owner:"Sentrolux",
         },
       ],
-      
+    },
+    {
+      id_item:"6372876128736123676asda",
+      item_code:"ITM007777",
+      item_desc:
+        'Giant Drilling Equipment 33" x 5000ft',
+      item_quantity: 2,
+      qty: 12,
+      available_qty: 2,
+      lot: [
+        {
+            id: "LOT-004-055",
+            value: "LOT-004-055",
+            allocation:"PT Sinar Mentari",
+            owner:"Mega Offshore"
+        },
+         {
+            id: "LOT-005-066",
+            value: "LOT-005-066",
+            allocation:"PT Bintang Samudra",
+            owner:"Global Offshore",
+        },
+         {
+            id: "LOT-006-077",
+            value: "LOT-006-077",
+            allocation:"PT Sentra Energia",
+            owner:"Blue Ocean",
+        },
+      ],
     },
   ];

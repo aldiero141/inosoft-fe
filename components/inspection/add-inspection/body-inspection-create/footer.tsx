@@ -2,14 +2,29 @@
 
 import { useDraftInspectionContext } from "@/providers/inspection/draft-inspection-provider";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import useCreateInspection from "@/components/api/inspections/useCreateInspection";
+import { toast } from "sonner";
 
 export default function Footer() {
   const { form } = useDraftInspectionContext();
+  const router = useRouter();
+  const { mutateAsync: createInspectionFn } = useCreateInspection();
 
   const onHandleSubmit = (type: string) => {
     form.handleSubmit((data) => {
-      console.log(data);
-      console.log(type);
+      createInspectionFn(
+        { body: data },
+        {
+          onSuccess: () => {
+            toast.success("Create inspection success");
+            router.push(`/inspection/67f9540009889f14370093441`);
+          },
+          onError: (error) => {
+            toast.error(error.message);
+          },
+        },
+      );
     })();
   };
 

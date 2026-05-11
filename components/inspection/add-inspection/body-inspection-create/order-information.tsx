@@ -6,7 +6,6 @@ import {
   Minus,
   ChevronDown,
   Logs,
-  SearchIcon,
   ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,11 +18,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import useItemsOptions from "@/components/api/options/useItemsOptions";
 
