@@ -25,24 +25,28 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import useItemsOptions from "@/components/api/options/useItemsOptions";
 
 export default function OrderInformation() {
-  const { form } = useDraftInspectionContext();
+  const {
+    form,
+    setSelectedItemForIndex,
+    setSelectedLotForIndex,
+    getAllocationOptions,
+    getLotOptions,
+    getOwnerOptions,
+  } = useDraftInspectionContext();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "order",
   });
 
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const [showMore, setShowMore] = useState<boolean>(false);
+  const { data: itemsOptions, isLoading } = useItemsOptions({
+    enabled: true,
+  });
 
-  // const handleSelectAll = () => {
-  //   if (selectedItems.length === fields.length) {
-  //     setSelectedItems([]);
-  //   } else {
-  //     setSelectedItems(fields.map((_, index) => index));
-  //   }
-  // };
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [showMore, setShowMore] = useState<boolean>(true);
 
   const handleSelectItem = (index: number) => {
     if (selectedItems.includes(index)) {
@@ -52,14 +56,31 @@ export default function OrderInformation() {
     }
   };
 
+  const onItemChange = (value: string, index: number) => {
+    if (!value) return;
+    const selectedItem = itemsOptions?.find((item) => item.id_item === value);
+    if (selectedItem) {
+      setSelectedItemForIndex(index, selectedItem);
+      form.setValue(`order.${index}.lot`, "");
+      form.setValue(`order.${index}.allocation`, "");
+      form.setValue(`order.${index}.owner`, "");
+      form.setValue(
+        `order.${index}.available_qty`,
+        selectedItem.available_qty || 0,
+      );
+    }
+  };
+
+  const onLotChange = (value: string, index: number) => {
+    if (!value) return;
+    setSelectedLotForIndex(index, value);
+  };
+
   const handleDeleteSelected = () => {
-    // Remove in descending order so indices don't shift for remaining items
     const sortedIndices = [...selectedItems].sort((a, b) => b - a);
     sortedIndices.forEach((index) => remove(index));
     setSelectedItems([]);
     if (fields.length - selectedItems.length === 0) {
-      // If we deleted all, add one empty back to satisfy min(1) if necessary
-      // But let's just append one empty so it's not totally empty
       append({
         item_name: "",
         lot: "",
@@ -146,15 +167,34 @@ export default function OrderInformation() {
                       <div className="w-[68%]">
                         <Select
                           value={field.value}
-                          onValueChange={field.onChange}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            onItemChange(value || "", index);
+                          }}
+                          items={itemsOptions?.map((option) => ({
+                            value: option.id_item,
+                            label: option.item_desc,
+                          }))}
                         >
                           <SelectTrigger className="w-full bg-white h-10">
                             <SelectValue placeholder="Select an item" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="item-1">Item 1</SelectItem>
-                            <SelectItem value="item-2">Item 2</SelectItem>
-                            <SelectItem value="item-3">Item 3</SelectItem>
+                            {itemsOptions?.length === 0 || isLoading ? (
+                              <SelectItem value="not-found">
+                                <div className="capitalize">Not Found</div>
+                              </SelectItem>
+                            ) : (
+                              itemsOptions?.map((option) => (
+                                <SelectItem
+                                  key={option.id_item}
+                                  value={option.id_item}
+                                  className="capitalize"
+                                >
+                                  {option.item_desc}
+                                </SelectItem>
+                              ))
+                            )}
                           </SelectContent>
                         </Select>
                       </div>
@@ -208,12 +248,30 @@ export default function OrderInformation() {
                       control={form.control}
                       name={`order.${index}.lot`}
                       render={({ field }) => (
-                        <InputGroup className="max-w-xs">
-                          <InputGroupAddon>
-                            <SearchIcon />
-                          </InputGroupAddon>
-                          <InputGroupInput {...field} className="h-10" />
-                        </InputGroup>
+                        <Select
+                          value={field.value}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            onLotChange(value || "", index);
+                          }}
+                        >
+                          <SelectTrigger className="w-full h-10">
+                            <SelectValue placeholder="Select lot" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {getLotOptions(index).length === 0 ? (
+                              <SelectItem value="not-found" disabled>
+                                No lots available
+                              </SelectItem>
+                            ) : (
+                              getLotOptions(index).map((opt) => (
+                                <SelectItem key={opt} value={opt}>
+                                  {opt}
+                                </SelectItem>
+                              ))
+                            )}
+                          </SelectContent>
+                        </Select>
                       )}
                     />
                   </div>
@@ -226,12 +284,27 @@ export default function OrderInformation() {
                       control={form.control}
                       name={`order.${index}.allocation`}
                       render={({ field }) => (
-                        <InputGroup className="max-w-xs">
-                          <InputGroupAddon>
-                            <SearchIcon />
-                          </InputGroupAddon>
-                          <InputGroupInput {...field} className="h-10" />
-                        </InputGroup>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="w-full h-10">
+                            <SelectValue placeholder="Select allocation" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {getAllocationOptions(index).length === 0 ? (
+                              <SelectItem value="not-found" disabled>
+                                No allocations available
+                              </SelectItem>
+                            ) : (
+                              getAllocationOptions(index).map((opt) => (
+                                <SelectItem key={opt} value={opt}>
+                                  {opt}
+                                </SelectItem>
+                              ))
+                            )}
+                          </SelectContent>
+                        </Select>
                       )}
                     />
                   </div>
@@ -244,12 +317,27 @@ export default function OrderInformation() {
                       control={form.control}
                       name={`order.${index}.owner`}
                       render={({ field }) => (
-                        <InputGroup className="max-w-xs">
-                          <InputGroupAddon>
-                            <SearchIcon />
-                          </InputGroupAddon>
-                          <InputGroupInput {...field} className="h-10" />
-                        </InputGroup>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="w-full h-10">
+                            <SelectValue placeholder="Select owner" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {getOwnerOptions(index).length === 0 ? (
+                              <SelectItem value="not-found" disabled>
+                                No owners available
+                              </SelectItem>
+                            ) : (
+                              getOwnerOptions(index).map((opt) => (
+                                <SelectItem key={opt} value={opt}>
+                                  {opt}
+                                </SelectItem>
+                              ))
+                            )}
+                          </SelectContent>
+                        </Select>
                       )}
                     />
                   </div>
@@ -262,12 +350,19 @@ export default function OrderInformation() {
                       control={form.control}
                       name={`order.${index}.condition`}
                       render={({ field }) => (
-                        <InputGroup className="max-w-xs">
-                          <InputGroupAddon>
-                            <SearchIcon />
-                          </InputGroupAddon>
-                          <InputGroupInput {...field} className="h-10" />
-                        </InputGroup>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="w-full h-10">
+                            <SelectValue placeholder="Select condition" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Good">Good</SelectItem>
+                            <SelectItem value="Repair">Repair</SelectItem>
+                            <SelectItem value="Scrap">Scrap</SelectItem>
+                          </SelectContent>
+                        </Select>
                       )}
                     />
                   </div>

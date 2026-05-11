@@ -7,6 +7,7 @@ import useInspectionByID from "@/components/api/inspections/useInspectionByID";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, UseFormReturn } from "react-hook-form";
 import * as z from "zod";
+import { ItemInterface } from "@/lib/dummy/responseItems";
 
 interface DraftInspectionContextData {
   inspection: InspectionInterface;
@@ -14,6 +15,16 @@ interface DraftInspectionContextData {
   form: UseFormReturn<ServiceFormValues>;
   scope: string[];
   setScope: Dispatch<SetStateAction<string[]>>;
+  selectedItemMap: Map<number, ItemInterface>;
+  setSelectedItemForIndex: (index: number, item: ItemInterface) => void;
+  setSelectedLotForIndex: (index: number, lotValue: string) => void;
+  getAllocationOptions: (index: number) => string[];
+  getLotOptions: (index: number) => string[];
+  getOwnerOptions: (index: number) => string[];
+  getLotByValue: (
+    index: number,
+    lotValue: string,
+  ) => { allocation: string; owner: string } | undefined;
 }
 
 const DraftInspectionContext = createContext<
@@ -121,6 +132,64 @@ const DraftInspectionProvider = ({
   });
 
   const [scope, setScope] = useState<string[]>([]);
+  const [selectedItemMap, setSelectedItemMap] = useState<
+    Map<number, ItemInterface>
+  >(new Map());
+
+  const [selectedLotMap, setSelectedLotMap] = useState<
+    Map<number, { allocation: string; owner: string }>
+  >(new Map());
+
+  const setSelectedItemForIndex = (index: number, item: ItemInterface) => {
+    setSelectedItemMap((prev) => {
+      const next = new Map(prev);
+      next.set(index, item);
+      return next;
+    });
+  };
+
+  const setSelectedLotForIndex = (index: number, lotValue: string) => {
+    const item = selectedItemMap.get(index);
+    if (!item) return;
+    const lot = item.lot.find((l) => l.value === lotValue);
+    if (!lot) return;
+    setSelectedLotMap((prev) => {
+      const next = new Map(prev);
+      next.set(index, { allocation: lot.allocation, owner: lot.owner });
+      return next;
+    });
+    form.setValue(`order.${index}.allocation`, lot.allocation);
+    form.setValue(`order.${index}.owner`, lot.owner);
+  };
+
+  const getLotOptions = (index: number): string[] => {
+    const item = selectedItemMap.get(index);
+    if (!item) return [];
+    return Array.from(new Set(item.lot.map((l) => l.value)));
+  };
+
+  const getAllocationOptions = (index: number): string[] => {
+    const lotData = selectedLotMap.get(index);
+    if (!lotData) return [];
+    return [lotData.allocation];
+  };
+
+  const getOwnerOptions = (index: number): string[] => {
+    const lotData = selectedLotMap.get(index);
+    if (!lotData) return [];
+    return [lotData.owner];
+  };
+
+  const getLotByValue = (
+    index: number,
+    lotValue: string,
+  ): { allocation: string; owner: string } | undefined => {
+    const item = selectedItemMap.get(index);
+    if (!item) return undefined;
+    const lot = item.lot.find((l) => l.value === lotValue);
+    if (!lot) return undefined;
+    return { allocation: lot.allocation, owner: lot.owner };
+  };
 
   const value = useMemo(
     () => ({
@@ -129,8 +198,23 @@ const DraftInspectionProvider = ({
       form,
       scope,
       setScope,
+      selectedItemMap,
+      setSelectedItemForIndex,
+      setSelectedLotForIndex,
+      getAllocationOptions,
+      getLotOptions,
+      getOwnerOptions,
+      getLotByValue,
     }),
-    [inspection, isLoadingInspection, form, scope, setScope],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      inspection,
+      isLoadingInspection,
+      form,
+      scope,
+      selectedItemMap,
+      selectedLotMap,
+    ],
   );
 
   return (
