@@ -8,21 +8,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-enum ServiceTypeEnum {
-  INSPECTION = "inspection",
-  REPAIR = "repair",
-  MAINTENANCE = "maintenance",
-}
+import useServiceTypeOptions from "@/components/api/options/useServiceTypeOptions";
+import { ServiceTypeInterface } from "@/lib/dummy/responseServiceType";
 
 export default function ServiceType() {
   const { form } = useDraftInspectionContext();
-
-  const ServiceTypeOptions = [
-    { label: "Inspection", value: ServiceTypeEnum.INSPECTION },
-    { label: "Repair", value: ServiceTypeEnum.REPAIR },
-    { label: "Maintenance", value: ServiceTypeEnum.MAINTENANCE },
-  ];
+  const { data: serviceTypeOptions, isLoading: isLoadingServiceTypeOptions } =
+    useServiceTypeOptions({ enabled: true });
 
   return (
     <Controller
@@ -47,11 +39,21 @@ export default function ServiceType() {
               <SelectValue placeholder="Service Type" />
             </SelectTrigger>
             <SelectContent>
-              {ServiceTypeOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  <div className="capitalize">{option.label}</div>
+              {serviceTypeOptions?.length === 0 ||
+              isLoadingServiceTypeOptions ? (
+                <SelectItem value="not-found">
+                  <div className="capitalize">Not Found</div>
                 </SelectItem>
-              ))}
+              ) : (
+                serviceTypeOptions?.map((option: ServiceTypeInterface) => (
+                  <SelectItem
+                    key={option.id_service_type}
+                    value={option.service_type_name}
+                  >
+                    <div className="capitalize">{option.service_type_name}</div>
+                  </SelectItem>
+                ))
+              )}
             </SelectContent>
           </Select>
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

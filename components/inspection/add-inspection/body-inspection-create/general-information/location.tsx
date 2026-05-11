@@ -8,15 +8,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useLocationOptions from "@/components/api/options/useLocationOptions";
 
 export default function Location() {
   const { form } = useDraftInspectionContext();
-
-  const LocationOptions = [
-    { label: "Location 1", value: "location-1" },
-    { label: "Location 2", value: "location-2" },
-    { label: "Location 3", value: "location-3" },
-  ];
+  const { data: locationOptions, isLoading: isLoadingLocationOptions } =
+    useLocationOptions({ enabled: true });
 
   return (
     <Controller
@@ -38,11 +35,17 @@ export default function Location() {
               <SelectValue placeholder="Location" />
             </SelectTrigger>
             <SelectContent>
-              {LocationOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  <div className="capitalize">{option.label}</div>
+              {locationOptions?.length === 0 || isLoadingLocationOptions ? (
+                <SelectItem value="not-found">
+                  <div className="capitalize">Not Found</div>
                 </SelectItem>
-              ))}
+              ) : (
+                locationOptions?.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    <div className="capitalize">{option.value}</div>
+                  </SelectItem>
+                ))
+              )}
             </SelectContent>
           </Select>
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

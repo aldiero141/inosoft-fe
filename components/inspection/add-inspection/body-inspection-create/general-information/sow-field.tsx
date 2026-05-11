@@ -9,29 +9,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-enum SOWFieldOptions {
-  ENGINE = "engine",
-  HULL = "hull",
-  AFT = "aft",
-}
+import useSowOptions from "@/components/api/options/useSowOptions";
 
 export default function SOWField() {
   const { form, setScope } = useDraftInspectionContext();
+  const { data: sowOptions, isLoading: isLoadingSowOptions } = useSowOptions({
+    enabled: true,
+  });
 
-  const SOWOptions = [
-    { label: "Engine", value: SOWFieldOptions.ENGINE },
-    { label: "Hull", value: SOWFieldOptions.HULL },
-    { label: "Aft", value: SOWFieldOptions.AFT },
-  ];
-
-  const onChangeServiceType = () => {
-    setScope(["Steering Wheele", "Brake System", "Suspension System"]);
-    form.setValue("scope", [
-      "Steering Wheele",
-      "Brake System",
-      "Suspension System",
-    ]);
+  const onChangeSOW = (value: string) => {
+    if (!value) return;
+    const selectedSow = sowOptions?.find((option) => option.sow_name === value);
+    const sowScope = selectedSow?.scope.map((scope) => scope.scope_name) || [];
+    setScope(sowScope);
+    form.setValue("scope", sowScope);
   };
 
   return (
@@ -50,18 +41,24 @@ export default function SOWField() {
                 value={field.value}
                 onValueChange={(value) => {
                   field.onChange(value);
-                  onChangeServiceType();
+                  onChangeSOW(value || "");
                 }}
               >
                 <SelectTrigger className="capitalize h-8">
                   <SelectValue placeholder="Scope of Work" />
                 </SelectTrigger>
                 <SelectContent>
-                  {SOWOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      <div className="capitalize">{option.label}</div>
+                  {sowOptions?.length === 0 || isLoadingSowOptions ? (
+                    <SelectItem value="not-found">
+                      <div className="capitalize">Not Found</div>
                     </SelectItem>
-                  ))}
+                  ) : (
+                    sowOptions?.map((option) => (
+                      <SelectItem key={option.id_sow} value={option.sow_name}>
+                        <div className="capitalize">{option.sow_name}</div>
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
               <SowEdit />

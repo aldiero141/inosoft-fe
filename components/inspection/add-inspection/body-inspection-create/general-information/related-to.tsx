@@ -8,16 +8,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useRelationOptions from "@/components/api/options/useRelationOptions";
 
 export default function RelatedTo() {
   const { form } = useDraftInspectionContext();
-
-  const relatedOptions = [
-    { label: "Related to 1", value: "related-1" },
-    { label: "Related to 2", value: "related-2" },
-    { label: "Related to 3", value: "related-3" },
-  ];
-
+  const { data: relatedOptions, isLoading: isLoadingRelatedOptions } =
+    useRelationOptions({ enabled: true });
   return (
     <Controller
       name="relate_to"
@@ -38,11 +34,17 @@ export default function RelatedTo() {
               <SelectValue placeholder="Service Type" />
             </SelectTrigger>
             <SelectContent>
-              {relatedOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  <div className="capitalize">{option.label}</div>
+              {relatedOptions?.length === 0 || isLoadingRelatedOptions ? (
+                <SelectItem value="not-found">
+                  <div className="capitalize">Not Found</div>
                 </SelectItem>
-              ))}
+              ) : (
+                relatedOptions?.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>
+                    <div className="capitalize">{option.id}</div>
+                  </SelectItem>
+                ))
+              )}
             </SelectContent>
           </Select>
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
